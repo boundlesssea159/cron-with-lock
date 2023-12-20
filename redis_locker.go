@@ -10,14 +10,6 @@ import (
 	"time"
 )
 
-type TaskLocker interface {
-	LockTask(key string, expire time.Duration) (string, bool)
-	UnLockTask(key, value string) bool
-	GetLockValue(key string) string
-	DelLock(key string) bool
-	ScanLocks() []string
-}
-
 type RedisLocker struct {
 	ctx     context.Context
 	rds     *redis.Client
@@ -41,6 +33,7 @@ func NewRedisLocker(ctx context.Context, config RedisLockerConfig) (*RedisLocker
 			closers: sync.Map{},
 		}, nil
 	}
+
 	client, err := cache.NewRedis(&cache.Config{
 		DSN: config.DSN,
 	})
