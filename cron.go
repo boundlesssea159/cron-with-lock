@@ -2,6 +2,7 @@ package cron_with_lock
 
 import (
 	"context"
+	"cron-with-lock/lockers"
 	"errors"
 	"fmt"
 	c "github.com/robfig/cron"
@@ -11,7 +12,7 @@ import (
 )
 
 type CronConfig struct {
-	RedisLockerConfig RedisLockerConfig // default nil
+	RedisLockerConfig lockers.RedisLockerConfig // default nil
 }
 
 type Task struct {
@@ -28,7 +29,7 @@ type Cron struct {
 	c      *c.Cron
 	count  int
 	result sync.Map
-	locker TaskLocker
+	locker lockers.Locker
 }
 
 func NewCron(config ...CronConfig) (*Cron, error) {
@@ -47,10 +48,10 @@ func NewCron(config ...CronConfig) (*Cron, error) {
 	return cron, nil
 }
 
-func initLocker(config CronConfig) (TaskLocker, error) {
+func initLocker(config CronConfig) (lockers.Locker, error) {
 	if !config.RedisLockerConfig.IsEmpty() {
-		return NewRedisLocker(context.Background(), config.RedisLockerConfig)
-	} // other locker implement
+		return lockers.NewRedisLocker(context.Background(), config.RedisLockerConfig)
+	} // other lockers implement
 	return nil, nil
 }
 

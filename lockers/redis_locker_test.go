@@ -1,4 +1,4 @@
-package cron_with_lock
+package lockers
 
 import (
 	"context"

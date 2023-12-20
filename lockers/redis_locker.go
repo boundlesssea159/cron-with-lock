@@ -1,7 +1,8 @@
-package cron_with_lock
+package lockers
 
 import (
 	"context"
+	"cron-with-lock"
 	"github.com/redis/go-redis/v9"
 	"strconv"
 	"sync"
@@ -42,8 +43,8 @@ func NewRedisLocker(ctx context.Context, config RedisLockerConfig) (*RedisLocker
 }
 
 func (this *RedisLocker) LockTask(key string, expire time.Duration) (string, bool) {
-	gid, _ := GetGoroutineId()
-	value := IpV4() + ":" + strconv.Itoa(int(gid))
+	gid, _ := cron_with_lock.GetGoroutineId()
+	value := cron_with_lock.IpV4() + ":" + strconv.Itoa(int(gid))
 	lockResult := this.rds.SetNX(this.ctx, key, value, expire).Val()
 	if !lockResult {
 		return "", lockResult

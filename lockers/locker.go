@@ -1,8 +1,8 @@
-package cron_with_lock
+package lockers
 
 import "time"
 
-type TaskLocker interface {
+type Locker interface {
 	LockTask(key string, expire time.Duration) (string, bool)
 	UnLockTask(key, value string) bool
 	GetLockValue(key string) string

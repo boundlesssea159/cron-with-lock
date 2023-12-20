@@ -1,6 +1,7 @@
 package cron_with_lock
 
 import (
+	"cron-with-lock/lockers"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/talentsec/go-common/cache"
@@ -115,7 +116,7 @@ func TestCron_ShouldRemoveAllLockAfterStopped(t *testing.T) {
 		return nil
 	}
 
-	cron, _ := NewCron(CronConfig{RedisLockerConfig: RedisLockerConfig{Default: client}})
+	cron, _ := NewCron(CronConfig{RedisLockerConfig: lockers.RedisLockerConfig{Default: client}})
 	cron.AddTask(Task{
 		Name:           "test",
 		Spec:           "* * * * * ?",
