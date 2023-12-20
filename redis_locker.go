@@ -3,8 +3,6 @@ package cron_with_lock
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
-	"github.com/talentsec/go-common/cache"
-	"github.com/talentsec/go-common/util"
 	"strconv"
 	"sync"
 	"time"
@@ -33,22 +31,19 @@ func NewRedisLocker(ctx context.Context, config RedisLockerConfig) (*RedisLocker
 			closers: sync.Map{},
 		}, nil
 	}
-
-	client, err := cache.NewRedis(&cache.Config{
-		DSN: config.DSN,
-	})
+	option, err := redis.ParseURL(config.DSN)
 	if err != nil {
 		return nil, err
 	}
 	return &RedisLocker{
 		ctx: ctx,
-		rds: client,
+		rds: redis.NewClient(option),
 	}, nil
 }
 
 func (this *RedisLocker) LockTask(key string, expire time.Duration) (string, bool) {
-	gid, _ := util.GetGoroutineId()
-	value := util.InternalIp() + ":" + strconv.Itoa(int(gid))
+	gid, _ := GetGoroutineId()
+	value := IpV4() + ":" + strconv.Itoa(int(gid))
 	lockResult := this.rds.SetNX(this.ctx, key, value, expire).Val()
 	if !lockResult {
 		return "", lockResult
