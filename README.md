@@ -9,16 +9,16 @@ This is a simple tasks controller which can limit just one node to execute task 
 cron, _ := NewCron(CronConfig{RedisLockerConfig: lockers.RedisLockerConfig{DSN: "redis://localhost:6379/1"}})
 // add task to cron
 cron.AddTask(Task{
-		Name:           "test",
-		Spec:           "* * * * * ?",
-		Executor:      func() error{
+		Name:           "test",         // task name
+		Spec:           "* * * * * ?", // task cron spec
+		Executor:      func() error{   // task logic
 		    fmt.Println("running")
 		    time.Sleep(10 * time.Second)
 		    return nil
 		} ,
-		ShouldLock:     true,
-		LockExpire:     3,
-		ResultCapacity: 1,
+		ShouldLock:     true, // decide whether the task need to be locked
+		LockExpire:     3, // lock duration
+		ResultCapacity: 1, // record task result and result num is limited by this value
 	})
 // start cron
 fmt.Println(cron.Start())
