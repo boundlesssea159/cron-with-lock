@@ -1,7 +1,7 @@
 # Cron-With-Lock
 This is a simple tasks controller which can limit just one node to execute task in distributed system.
 ## Implementation
-- [x] base on Redis and provide watchdog to delay the expiration.
+- [x] base on Redis and provide watch-dog to delay the expiration.
 - [ ] base on Zookeeper
 ## Use
 ````go
