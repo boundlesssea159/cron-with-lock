@@ -2,9 +2,9 @@ package cron_with_lock
 
 import (
 	"context"
-	"cron-with-lock/lockers"
 	"errors"
 	"fmt"
+	"github.com/cron/cron-with-lock/lockers"
 	c "github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 	"sync"

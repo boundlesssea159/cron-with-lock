@@ -1,8 +1,8 @@
 package cron_with_lock
 
 import (
-	"cron-with-lock/lockers"
 	"fmt"
+	"github.com/cron/cron-with-lock/lockers"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
