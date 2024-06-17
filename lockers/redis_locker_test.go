@@ -3,6 +3,7 @@ package lockers
 import (
 	"context"
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"
@@ -11,7 +12,9 @@ import (
 
 func TestRedisLocker_OnlyOneMachineCanLock(t *testing.T) {
 	locker, err := NewRedisLocker(context.Background(), RedisLockerConfig{
-		DSN: "redis://localhost:6379/15",
+		Default: redis.NewClient(&redis.Options{
+			Addr: "localhost:6379",
+		}),
 	})
 	assert.Nil(t, err)
 
@@ -62,7 +65,7 @@ func TestRedisLocker_OnlyOneMachineCanLock(t *testing.T) {
 
 func TestRedisLocker_ShouldExtendExpireTimeByWatchDog(t *testing.T) {
 	locker, err := NewRedisLocker(context.Background(), RedisLockerConfig{
-		DSN: "redis://localhost:6379/15",
+		DSN: "redis://localhost:6379/1",
 	})
 	assert.Nil(t, err)
 
@@ -88,7 +91,7 @@ func TestRedisLocker_ShouldExtendExpireTimeByWatchDog(t *testing.T) {
 
 func TestRedisLocker_ScanLocks(t *testing.T) {
 	locker, err := NewRedisLocker(context.Background(), RedisLockerConfig{
-		DSN: "redis://localhost:6379/15",
+		DSN: "redis://localhost:6379/1",
 	})
 	assert.Nil(t, err)
 

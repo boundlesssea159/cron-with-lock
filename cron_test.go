@@ -3,9 +3,9 @@ package cron_with_lock
 import (
 	"cron-with-lock/lockers"
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
-	"github.com/talentsec/go-common/cache"
-	"github.com/talentsec/go-common/log"
+	"log"
 	"testing"
 	"time"
 )
@@ -104,12 +104,9 @@ func TestCron_ShouldNotTerminalIfPanic(t *testing.T) {
 }
 
 func TestCron_ShouldRemoveAllLockAfterStopped(t *testing.T) {
-	client, err := cache.NewRedis(&cache.Config{
-		DSN: "redis://localhost:6379/15",
+	client := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
 	})
-
-	assert.Nil(t, err)
-
 	f := func() interface{} {
 		fmt.Println("running")
 		time.Sleep(10 * time.Second)
@@ -125,9 +122,9 @@ func TestCron_ShouldRemoveAllLockAfterStopped(t *testing.T) {
 		LockExpire:     3,
 		ResultCapacity: 1,
 	})
-	err = cron.Start()
+	err := cron.Start()
 	assert.True(t, err == nil)
-	time.Sleep(5 * time.Second)
+	time.Sleep(1 * time.Second)
 	locks := cron.ScanLockedTasks()
 	assert.Contains(t, locks, cron.DecorateName("test"))
 	cron.Stop()
