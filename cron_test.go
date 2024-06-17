@@ -2,7 +2,7 @@ package cron_with_lock
 
 import (
 	"fmt"
-	"github.com/cron/cron-with-lock/lockers"
+	"github.com/boundlesssea159/cron-with-lock/lockers"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"

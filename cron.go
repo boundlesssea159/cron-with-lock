@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/cron/cron-with-lock/lockers"
+	"github.com/boundlesssea159/cron-with-lock/lockers"
 	c "github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 	"sync"
