@@ -1,4 +1,4 @@
-module cron-with-lock
+module github.com/cron/cron-with-lock
 
 go 1.20
 
