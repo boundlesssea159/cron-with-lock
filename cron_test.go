@@ -3,7 +3,6 @@ package cron_with_lock
 import (
 	"cron-with-lock/lockers"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -19,9 +18,7 @@ func taskTwo() interface{} {
 }
 
 func TestCron_ShouldRunMultiJob(t *testing.T) {
-
 	cron, _ := NewCron()
-
 	cron.AddTask(Task{
 		Name:           "taskOne",
 		Spec:           "* * * * * ?",
@@ -104,16 +101,16 @@ func TestCron_ShouldNotTerminalIfPanic(t *testing.T) {
 }
 
 func TestCron_ShouldRemoveAllLockAfterStopped(t *testing.T) {
-	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-	})
+	//client := redis.NewClient(&redis.Options{
+	//	Addr: "localhost:6379",
+	//})
 	f := func() interface{} {
 		fmt.Println("running")
 		time.Sleep(10 * time.Second)
 		return nil
 	}
 
-	cron, _ := NewCron(CronConfig{RedisLockerConfig: lockers.RedisLockerConfig{Default: client}})
+	cron, _ := NewCron(CronConfig{RedisLockerConfig: lockers.RedisLockerConfig{DSN: "redis://localhost:6379/1"}})
 	cron.AddTask(Task{
 		Name:           "test",
 		Spec:           "* * * * * ?",
